@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKH STORE - Khuyến Mãi</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /*--- HEADER GIỮ NGUYÊN GỐC ---*/
+        header {
+            background-color: #cc2424;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo-area a {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            width: 40%;
+            max-width: 500px;
+        }
+
+        .search-box input {
+            border: none;
+            padding: 8px 15px;
+            width: 100%;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-box button {
+            background-color: #ff9900;
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .cart-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: background 0.2s;
+        }
+
+        .cart-area:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /*--- LAYOUT CHÍNH GIỮ NGUYÊN GỐC ---*/
+        .container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /*--- SIDEBAR TRÁI GIỮ NGUYÊN GỐC ---*/
+        aside {
+            width: 240px;
+            flex-shrink: 0;
+        }
+
+        .menu-title {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #000;
+        }
+
+        .menu-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .menu-item {
+            position: relative;
+        }
+
+        .menu-item > a {
+            display: block;
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .menu-item.active > a {
+            color: white;
+            background-color: #cc2424;
+        }
+
+        .submenu {
+            display: none;
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .submenu li {
+            margin: 8px 0;
+        }
+
+        .submenu li a {
+            display: block;
+            text-decoration: none;
+            color: #000;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px 0;
+        }
+
+        .submenu li a:hover {
+            color: #cc2424;
+        }
+
+        .menu-item:hover .submenu {
+            display: block;
+        }
+
+        .btn-account {
+            display: block;
+            text-align: center;
+            background-color: #cc2424;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 15px;
+            margin-top: 15px;
+        }
+
+        .btn-account:hover {
+            background-color: #b31f1f;
+        }
+
+        /*--- NỘI DUNG PHẢI GIỮ NGUYÊN GỐC ---*/
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .banner {
+            background: linear-gradient(90deg, #ff7300, #ff9900);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+            height: fit-content;
+        }
+
+        /* LƯỚI SẢN PHẨM KHUYẾN MÃI */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative; /* Thêm để định vị Tag giảm giá */
+        }
+
+        /* Thêm thuộc tính hiển thị Nhãn giảm giá đúng như trong ảnh mẫu */
+        .discount-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #cc2424;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 4px;
+            z-index: 5;
+        }
+
+        .product-img {
+            height: 160px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            max-width: 100%;
+        }
+
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+            color: #000;
+        }
+
+        /* CSS giá gốc gạch ngang và giá khuyến mãi */
+        .price-old {
+            color: #888;
+            text-decoration: line-through;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .product-price {
+            color: #cc2424;
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .btn-buy {
+            background: #cc2424;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 6px;
+        }
+
+        .btn-buy:hover { background-color: #b31f1f; }
+
+        .btn-cart {
+            background: #ff9900;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-cart:hover { background-color: #e68a00; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area"><a href="trangchu.html">LKH STORE</a></div>
+        <div class="search-box">
+            <input type="text" placeholder="Tìm kiếm điện thoại...">
+            <button>Tìm</button>
+        </div>
+        <a href="giohang.html" class="cart-area">🛒 Giỏ hàng: <span id="cart-count">0</span></a>
+    </header>
+
+    <div class="container">
+        <aside>
+            <div class="menu-title">Danh Mục</div>
+            <ul class="menu-list">
+                <li class="menu-item active">
+                    <a href="trangchu.html">🏠 Trang chủ</a>
+                    <ul class="submenu">
+                        <li><a href="#">🔥 Khuyến mãi hôm nay</a></li>
+                        <li><a href="#">⭐ Sản phẩm nổi bật</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item"><a href="sanpham.html">📱 Sản phẩm</a></li>
+                <li class="menu-item"><a href="gioithieu.html">ℹ️ Giới thiệu</a></li>
+                <li class="menu-item"><a href="lienhe.html">📞 Liên hệ</a></li>
+                <li class="menu-item"><a href="theodoidonhang.html">🚚 Theo dõi đơn hàng</a></li>
+                <li class="menu-item"><a href="danhsachtaikhoan.html">👥 Danh sách tài khoản</a></li>
+            </ul>
+            <a href="taikhoan.html" class="btn-account">👤 Tài khoản</a>
+        </aside>
+
+        <main>
+            <div class="banner">🔥 DANH SÁCH 10 DÒNG ĐIỆN THOẠI HOT GIẢM GIÁ MẠNH</div>
+            
+            <div class="product-grid">
+                
+                <div class="product-card">
+                    <span class="discount-tag">Giảm 21%</span>
+                    <img class="product-img" src="https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400" alt="Samsung S24 Ultra">
+                    <div class="product-name">Samsung Galaxy S24 Ultra</div>
+                    <div class="price-old">31.990.000đ</div>
+                    <div class="product-price">24.990.000đ</div>
+                    <button class="btn-buy" onclick="buyNow()">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart()">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="discount-tag">Giảm 15%</span>
+                    <img class="product-img" src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400" alt="Xiaomi 14 Ultra">
+                    <div class="product-name">Xiaomi 14 Ultra 5G</div>
+                    <div class="price-old">29.990.000đ</div>
+                    <div class="product-price">25.490.000đ</div>
+                    <button class="btn-buy" onclick="buyNow()">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart()">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="discount-tag">Giảm 25%</span>
+                    <img class="product-img" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400" alt="Google Pixel 8 Pro">
+                    <div class="product-name">Google Pixel 8 Pro AI</div>
+                    <div class="price-old">26.500.000đ</div>
+                    <div class="product-price">19.800.000đ</div>
+                    <button class="btn-buy" onclick="buyNow()">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart()">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="discount-tag">Giảm 18%</span>
+                    <img class="product-img" src="https://images.unsplash.com/photo-1565630916779-e303be97b6f5?w=400" alt="OnePlus 12">
+                    <div class="product-name">OnePlus 12 5G</div>
+                    <div class="price-old">22.990.000đ</div>
+                    <div class="product-price">18.850.000đ</div>
+                    <button class="btn-buy" onclick="buyNow()">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart()">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="discount-tag">Giảm 16%</span>
+                    <img class="product-img" src="https://images.unsplash.com/photo-1573148195900-7845dcb9b127?w=400" alt="OPPO Find X7">
+                    <div class="product-name">OPPO Find X7 Ultra</div>
+                    <div class="price-old">27.000.000đ</div>
+                    <div class="product-price">22.680.000đ</div>
+                    <button class="btn-buy" onclick="buyNow()">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart()">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="discount-tag">Giảm 14%</span>
+                    <img class="product-img" src="https://images.unsplash.com/photo-1546054454-aa26e2b734c7?w=400" alt="Asus ROG Phone 8">
+                    <div class="product-name">Asus ROG Phone 8</div>
+                    <div class="price-old">28.990.000đ</div>
+                    <div class="product-price">24.930.000đ</div>
+                    <button class="btn-buy" onclick="buyNow()">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart()">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="discount-tag">Giảm 20%</span>
+                    <img class="product-img" src="https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400" alt="Samsung Galaxy A55">
+                    <div class="product-name">Samsung Galaxy A55 5G</div>
+                    <div class="price-old">11.490.000đ</div>
+                    <div class="product-price">9.190.000đ</div>
+                    <button class="btn-buy" onclick="buyNow()">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart()">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="discount-tag">Giảm 13%</span>
+                    <img class="product-img" src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400" alt="Xiaomi Redmi Note 13">
+                    <div class="product-name">Xiaomi Redmi Note 13</div>
+                    <div class="price-old">7.990.000đ</div>
+                    <div class="product-price">6.950.000đ</div>
+                    <button class="btn-buy" onclick="buyNow()">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart()">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="discount-tag">Giảm 10%</span>
+                    <img class="product-img" src="https://images.unsplash.com/photo-1573148195900-7845dcb9b127?w=400" alt="OPPO Reno11 Pro">
+                    <div class="product-name">OPPO Reno11 Pro 5G</div>
+                    <div class="price-old">16.990.000đ</div>
+                    <div class="product-price">15.290.000đ</div>
+                    <button class="btn-buy" onclick="buyNow()">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart()">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="discount-tag">Giảm 21%</span>
+                    <img class="product-img" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400" alt="Vivo V30 Pro">
+                    <div class="product-name">Vivo V30 Pro 5G</div>
+                    <div class="price-old">14.990.000đ</div>
+                    <div class="product-price">11.840.000đ</div>
+                    <button class="btn-buy" onclick="buyNow()">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart()">Thêm vào giỏ</button>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let cartCount = 0;
+        function addCart() {
+            cartCount++;
+            document.getElementById('cart-count').innerText = cartCount;
+            alert('Đã thêm sản phẩm vào giỏ hàng thành công!');
+        }
+
+        function buyNow() {
+            alert('Đang chuyển hướng đến giỏ hàng để tiến hành thanh toán...');
+            window.location.href = "giohang.html";
+        }
+    </script>
+</body>
+</html>

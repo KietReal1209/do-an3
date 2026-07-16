@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKH STORE - Sản Phẩm Nổi Bật</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /*--- HEADER ---*/
+        header {
+            background-color: #cc2424;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo-area a {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            width: 40%;
+            max-width: 500px;
+        }
+
+        .search-box input {
+            border: none;
+            padding: 8px 15px;
+            width: 100%;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-box button {
+            background-color: #ff9900;
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* KHU VỰC GIỎ HÀNG */
+        .cart-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: background 0.2s;
+        }
+
+        .cart-area:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /*--- LAYOUT CHÍNH ---*/
+        .container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /*--- SIDEBAR TRÁI ---*/
+        aside {
+            width: 240px;
+            flex-shrink: 0;
+        }
+
+        .menu-title {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #000;
+        }
+
+        .menu-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .menu-item {
+            position: relative;
+        }
+
+        .menu-item > a {
+            display: block;
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        /* Giữ menu cha nổi bật */
+        .menu-item.active > a {
+            color: white;
+            background-color: #cc2424;
+        }
+
+        .submenu {
+            display: none;
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        /* Luôn hiển thị submenu khi đang ở trang con của nó */
+        .menu-item.active .submenu {
+            display: block;
+        }
+
+        .submenu li {
+            margin: 8px 0;
+        }
+
+        .submenu li a {
+            display: block;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px 0;
+        }
+
+        .submenu li a:hover, 
+        .submenu li.sub-active a {
+            color: #ff9900;
+        }
+
+        .btn-account {
+            display: block;
+            text-align: center;
+            background-color: #cc2424;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 15px;
+            margin-top: 15px;
+        }
+
+        .btn-account:hover {
+            background-color: #b31f1f;
+        }
+
+        /*--- NỘI DUNG PHẢI ---*/
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .banner {
+            background: linear-gradient(90deg, #cc2424, #ff9900);
+            color: white;
+            padding: 18px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* LƯỚI SẢN PHẨM IPHONE */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            border: 1px solid #eee;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        /* THẺ TAG NỔI BẬT (BADGE) */
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #cc2424;
+            color: white;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 4px;
+            text-transform: uppercase;
+            z-index: 1;
+        }
+
+        .product-badge.best-seller {
+            background-color: #ff9900;
+        }
+
+        .product-badge.promo {
+            background-color: #28a745;
+        }
+
+        .product-img {
+            height: 160px;
+            object-fit: contain;
+            margin: 15px 0 10px;
+            max-width: 100%;
+        }
+
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+            color: #000;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-price {
+            color: #cc2424;
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .btn-buy {
+            background: #cc2424;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 6px;
+        }
+
+        .btn-buy:hover { background-color: #b31f1f; }
+
+        .btn-cart {
+            background: #ff9900;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-cart:hover { background-color: #e68a00; }
+        
+        /* Thông báo khi không tìm thấy sản phẩm */
+        .no-result {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            font-weight: bold;
+            color: #666;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area"><a href="trangchu.html">LKH STORE</a></div>
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm nổi bật...">
+            <button id="search-btn">Tìm</button>
+        </div>
+        <a href="giohang.html" class="cart-area">🛒 Giỏ hàng: <span id="cart-count">0</span></a>
+    </header>
+
+    <div class="container">
+        <aside>
+            <div class="menu-title">Danh Mục</div>
+            <ul class="menu-list">
+                <li class="menu-item active">
+                    <a href="trangchu.html">🏠 Trang chủ</a>
+                    <ul class="submenu">
+                        <li><a href="khuyenmai.html">🔥 Khuyến mãi hôm nay</a></li>
+                        <li class="sub-active"><a href="sanphamnoibat.html">⭐ Sản phẩm nổi bật</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item"><a href="sanpham.html">📱 Sản phẩm</a></li>
+                <li class="menu-item"><a href="gioithieu.html">ℹ️ Giới thiệu</a></li>
+                <li class="menu-item"><a href="lienhe.html">📞 Liên hệ</a></li>
+                <li class="menu-item"><a href="theodioidonhang.html">🚚 Theo dõi đơn hàng</a></li>
+                <li class="menu-item"><a href="danhsachtaikhoan.html">👥 Danh sách tài khoản</a></li>
+            </ul>
+            <a href="taikhoan.html" class="btn-account">👤 Tài khoản</a>
+        </aside>
+
+        <main>
+            <div class="banner">⭐ BẢNG VÀNG SẢN PHẨM IPHONE NỔI BẬT & BÁN CHẠY NHẤT</div>
+            
+            <div class="product-grid" id="product-grid">
+                <div class="no-result" id="no-result">Không tìm thấy sản phẩm nào phù hợp!</div>
+                
+                <div class="product-card">
+                    <span class="product-badge">Hot</span>
+                    <img class="product-img" src="image/15promax.webp" alt="iPhone 15 Pro Max">
+                    <div class="product-name">iPhone 15 Pro Max 256GB</div>
+                    <div class="product-price">29.490.000đ</div>
+                    <button class="btn-buy" onclick="buyNow('iPhone 15 Pro Max 256GB')">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart('iPhone 15 Pro Max 256GB')">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="product-badge best-seller">Bán Chạy</span>
+                    <img class="product-img" src="image/15pto.webp" alt="iPhone 15 Pro">
+                    <div class="product-name">iPhone 15 Pro 128GB</div>
+                    <div class="product-price">27.500.000đ</div>
+                    <button class="btn-buy" onclick="buyNow('iPhone 15 Pro 128GB')">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart('iPhone 15 Pro 128GB')">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="product-badge promo">Trả góp 0%</span>
+                    <img class="product-img" src="image/ip15.webp" alt="iPhone 15">
+                    <div class="product-name">iPhone 15 128GB</div>
+                    <div class="product-price">22.990.000đ</div>
+                    <button class="btn-buy" onclick="buyNow('iPhone 15 128GB')">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart('iPhone 15 128GB')">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="product-badge best-seller">Bán Chạy</span>
+                    <img class="product-img" src="image/ip14pri.webp" alt="iPhone 14 Pro">
+                    <div class="product-name">iPhone 14 Pro 128GB</div>
+                    <div class="product-price">24.000.000đ</div>
+                    <button class="btn-buy" onclick="buyNow('iPhone 14 Pro 128GB')">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart('iPhone 14 Pro 128GB')">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="product-badge promo">Giảm Sâu</span>
+                    <img class="product-img" src="image/ip13.webp" alt="iPhone 13">
+                    <div class="product-name">iPhone 13 128GB</div>
+                    <div class="product-price">18.000.000đ</div>
+                    <button class="btn-buy" onclick="buyNow('iPhone 13 128GB')">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart('iPhone 13 128GB')">Thêm vào giỏ</button>
+                </div>
+
+                <div class="product-card">
+                    <span class="product-badge">Hot</span>
+                    <img class="product-img" src="image/ip11.jfif" alt="iPhone 11">
+                    <div class="product-name">iPhone 11 64GB</div>
+                    <div class="product-price">10.000.000đ</div>
+                    <button class="btn-buy" onclick="buyNow('iPhone 11 64GB')">Mua ngay</button>
+                    <button class="btn-cart" onclick="addCart('iPhone 11 64GB')">Thêm vào giỏ</button>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- Quản lý Giỏ hàng ---
+        let cartCount = 0;
+        
+        function addCart(productName) {
+            cartCount++;
+            document.getElementById('cart-count').innerText = cartCount;
+            alert(`Đã thêm thành công "${productName}" vào giỏ hàng!`);
+        }
+
+        function buyNow(productName) {
+            alert(`Đang chuyển hướng đến giỏ hàng để tiến hành thanh toán cho "${productName}"...`);
+            window.location.href = "giohang.html";
+        }
+
+        // --- Chức năng Tìm kiếm ---
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const productCards = document.querySelectorAll('.product-card');
+        const noResult = document.getElementById('no-result');
+
+        function performSearch() {
+            const keyword = searchInput.value.toLowerCase().trim();
+            let hasProduct = false;
+
+            productCards.forEach(card => {
+                const productName = card.querySelector('.product-name').innerText.toLowerCase();
+                
+                if (productName.includes(keyword)) {
+                    card.style.display = 'flex'; 
+                    hasProduct = true;
+                } else {
+                    card.style.display = 'none'; 
+                }
+            });
+
+            if (hasProduct) {
+                noResult.style.display = 'none';
+            } else {
+                noResult.style.display = 'block';
+            }
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('input', performSearch);
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
+</body>
+</html>
